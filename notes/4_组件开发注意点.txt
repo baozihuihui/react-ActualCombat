@@ -1,0 +1,104 @@
+1、setState(newState,callback)
+React中可以通过修改state，通知React进行Update的方法
+是一个异步方法
+callback用途，接收更新后的state，可以继续操作
+
+异步方法的好处
+setState设计为异步，可以显著的提升性能；
+  如果每次调用setState都进行一次更新，那么意味着render函数会被频繁调用，界面重新渲染，这样效率是很低的；
+  最好的办法应该是获取到多个更新，之后进行批量更新；
+如果同步更新了state，但是还没有执行render函数，那么state和props不能保持同步；
+  state和props不能保持一致性，会在开发中产生很多的问题；
+
+
+在调用setState后直接使用新的state是错误的
+this.setState({id:'123'});
+console.log(this.state.id) // 这时候id不一定是 123
+
+应该写成
+this.setState({id:'123'},(state)=>{
+    console.log(state.id) // 这时候 id===123
+})
+
+2、受控组件
+在React 中，可变状态（mutable state）通常保存在组件的state 属性中，并且只能通过使用setState()来更新。
+  我们将两者结合起来，使React的state成为“唯一数据源”；
+  渲染表单的React 组件还控制着用户输入过程中表单发生的操作；
+  被React 以这种方式控制取值的表单输入元素就叫做“受控组件”；
+由于在表单元素上设置了value属性，因此显示的值将始终为this.state.value，这使得React 的state 成为唯一数据源。
+由于handleUsernameChange在每次按键时都会执行并更新React 的state，因此显示的值将随着用户输入而更新。
+
+class FormComponent extends React.Component{
+  constructor(){
+    this.state = {
+      inputValue:'',
+    }
+  }
+
+  onChange = (e) =>{
+    const value = e.target.value;
+    this.setState({inputValue:value});
+  }
+
+  render(){
+    return (
+      <input type="text" value={this.state.inputValue} onChange={this.onChange} />
+    )
+  }
+}
+
+3、非受控组件
+如果要使用非受控组件中的数据，那么我们需要使用ref来从DOM节点中获取表单数据
+在非受控组件中通常使用defaultValue来设置默认值
+
+class FormComponent extends React.Component{
+
+  constructor(){
+    this.inputRef = React.createRef();
+  }
+
+  onBtnClick = () =>{
+    console.log(
+      `input - ${this.inputRef.current.value}`
+    );
+  }
+
+  render(){
+    return (
+      <>
+        <input defaultValue="haha" ref={this.inputRef} />
+        <button onClick={this.onBtnClick}>确定</button>
+      </>
+    )
+  }
+}
+
+4、高阶组件
+至少满足以下条件之一：
+  接受一个或多个函数作为输入；
+  输出一个函数；
+
+高阶组件的英文是Higher-Order Components，简称为HOC；
+  官方的定义：高阶组件是参数为组件，返回值为新组件的函数；
+
+我们可以进行如下的解析：
+  首先，高阶组件本身不是一个组件，而是一个函数；
+  其次，这个函数的参数是一个组件，返回值也是一个组件；
+
+function higherOrderComponent(component){
+  class Component extends React.Component{
+    render (){
+      return <component/>
+    }
+  }
+  Component.displayName = "EnhancedComponent";
+  return Component;
+}
+const EnhancedComponent = higherOrderComponent(WarppedComponent);
+
+应用场景-：
+props 增强
+
+
+
+

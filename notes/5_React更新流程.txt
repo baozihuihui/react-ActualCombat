@@ -1,0 +1,48 @@
+1、react 渲染流程
+JSX -> 虚拟DOM -> 真实DOM
+
+2、react 更新流程
+props/state的改变 -> render函数重新执行 -> 产生新的Fiber树 -> 新旧Fiber树进行对比 -> 计算出差异 -> 更新到真实DOM
+
+Fiber树对比的diff对比方式
+时间复杂度 O(n)，原因如下：
+ 同层节点之间相互比较，不会跨节点比较；
+ 不同类型的节点，产生不同的树结构；
+
+情况一：对比不同类型元素
+当节点为不同的元素，React会拆卸原有的树，并且建立起新的树：
+当一个元素从<a>变成<img>，从<Article>变成<Comment>，或从<Button>变成<div>都会触发一个完整的重建流程；
+当卸载一棵树时，对应的DOM节点也会被销毁，组件实例将执行componentWillUnmount()方法；
+当建立一棵新的树时，对应的DOM节点会被创建以及插入到DOM中，组件实例将执行componentWillMount()方法，紧接着componentDidMount()方法；
+
+<div> <Counter /> </div>
+变为
+<span> <Counter /> </span>
+这时候根结点由div变为了span,那么它的子节点Counter,不会保留，只会卸载后重新创建。
+
+情况二：对比相同类型元素
+当比对两个相同类型的React 元素时，React 会保留DOM节点，仅比对及更新有改变的属性。
+如果是同类型的组件元素：
+    组件会保持不变，React会更新该组件的props，并且调用 getDerivedStateFromProps()和 getSnapshotBeforeUpdate()方法；
+    下一步，调用render()方法，diff算法将在之前的结果以及新的结果中进行递归；
+
+情况三：对子节点进行递归
+在默认条件下，当递归DOM节点的子元素时，React 会同时遍历两个子元素的列表；当产生差异时，生成一个mutation。
+  我们来看一下在最后插入一条数据的情况：
+  前面两个比较是完全相同的，所以不会产生mutation；
+  最后一个比较，产生一个mutation，将其插入到新的DOM树中即可；
+
+但是如果我们是在中间插入一条数据：
+  React会对每一个子元素产生一个mutation，而不是保持<li>星际穿越</li>和<li>盗梦空间</li>的不变；
+  这种低效的比较方式会带来一定的性能问题；
+
+当子元素(这里的li)拥有key时，React 使用key来匹配原有树上的子元素以及最新树上的子元素：
+   在下面这种场景下，key为111和222的元素仅仅进行位移，不需要进行任何的修改；
+   将key为333的元素插入到最前面的位置即可；
+   key的注意事项：
+        key应该是唯一的；
+        key不要使用随机数（随机数在下一次render时，会重新生成一个数字）；
+        使用index作为key，对性能是没有优化的(出现插入时，会导致更新异常)；
+
+
+

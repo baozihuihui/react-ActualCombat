@@ -1,0 +1,104 @@
+1、组件化定义
+整个逻辑其实可以看做一个整体，那么我们就可以将其封装成一个组件：
+我们说过ReactDOM.render第一参数是一个HTML原生或者一个组件；
+所以我们可以先将之前的业务逻辑封装到一个组件中，然后传入到ReactDOM.render函数中的第一个参数；
+在React中，如何封装一个组件呢？
+这里我们暂时使用类的方式封装组件：
+  1.定义一个类（类名大写，组件的名称是必须大写的，小写会被认为是HTML元素），继承自React.Component
+  2.实现当前组件的render函数ürender当中返回的jsx内容，就是之后React会帮助我们渲染的内容
+
+    <div id="root" />
+
+    class App extends React.Component{
+        render(){
+            return <h1> Hello React！ </h1>
+        }
+    }
+
+    React.render(<App />,doucument.getElementById('root'));
+
+2、组件-数据依赖
+组件化问题一：数据在哪里定义？
+在组件中的数据，我们可以分成两类：
+  参与界面更新的数据：当数据变量时，需要更新组件渲染的内容
+  不参与界面更新的数据：当数据变量时，不需要更新将组建渲染的内容
+参与界面更新的数据我们也可以称之为是参与数据流，这个数据是定义在当前对象的state中
+我们可以通过在构造函数中this.state={定义的数据}
+当我们的数据发生变化时，我们可以调用this.setState来更新数据，并且通知React进行update操作
+ 在进行update操作时，就会重新调用render函数，并且使用最新的数据，来渲染界面
+ 
+    class App extends React.Component{
+        constructor{
+            super();
+            this.state = {
+                message:'hello world'
+            }
+        }
+    }
+
+3、组件-事件绑定
+组件化问题二：事件绑定中的this
+在类中直接定义一个函数，并且将这个函数绑定到html原生的onClick事件上，当前这个函数的this指向的是谁呢？
+默认情况下是undefinedp很奇怪，居然是undefined；
+因为在正常的DOM操作中，监听点击，监听函数中的this其实是节点对象（比如说是button对象）；
+这次因为React并不是直接渲染成真实的DOM，我们所编写的button只是一个语法糖，它的本质React的Element对象；
+那么在这里发生监听的时候，react给我们的函数绑定的this，默认情况下就是一个undefined；
+
+    class App extende React.Component{
+        constructor(){
+            super();
+            this.bindWithConstructor = this.bindWithConstructor.bind(this);
+        }
+
+        function bindWithConstructor(e){
+            console.log(this,e);
+        }
+
+        arrowFunction = (e)=>{
+            console.log(this,e);
+        }
+
+        jsxFunction = (e)=>{
+            console.log(this,e)
+        }
+
+        render(){
+            retutn (
+                <>
+                 <button onClick={this.bindWithConstructor} ></button>
+                 <button onClick={this.arrowFunction}></button>
+                 <button onClick={ (e)=>{ this.jsxFunction(e) } }></button>
+                </>
+            )
+        }
+    }
+
+classComponent(类组件)
+默认要求
+ 组件的名称必须是大写
+ 组件必须继承React.Component，这个是用来区分FunctionComponent
+ 组件必须实现render函数
+render函数被调用时，会检查this.props\this.state的变化并返回一定的内容
+    1、ReactElement
+        一个DOM结点
+        一个ReactElement
+    2、数组或者React.Fragments
+        返回多个元素
+    3、Portals
+        可以渲染子结点渲染到其他DOM结点下
+    4、字符串或数值
+        在DOM中直接渲染成文本
+    5、布尔类型或null
+        什么都不渲染
+
+functionComponent(函数组件)
+默认要求
+    使用function进行声明，返回值要求与classComponent的render的返回值是一样的
+特点
+    1、没有声明周期
+    2、没有this(没有组件实例)
+    3、没有内部状态(this.state)
+
+export default function App(props){
+    return ( <h2> hello world </h2> )
+}

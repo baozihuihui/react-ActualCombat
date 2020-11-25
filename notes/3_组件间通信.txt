@@ -1,0 +1,116 @@
+1、父子间组件通信
+  父结点数据传递给子组件 通过 props进行传递，子组件只能用于展示或者判断，但不能进行更新
+  当子组件需要通知父组件数据变化时，父组件通过把函数作为一个props传递，子组件只需要按需调用就可以了
+
+2、非父子组件间通信
+ContextAPI 在顶层进行数据定义，在这个组件树的所有组件就能通过 Context 的API进行获取和修改
+Context 提供了一个无需为每层组件手动添加 props，就能在组件树间进行数据传递的方法。
+
+API 
+React.createContext
+ const MyContext = React.createContext(defaultValue);
+
+ defaultValue
+ 不止是一个值，也可以是一个对象{value，changeValue()} 也可以提供这样的方法进行修改value
+
+创建一个 Context 对象。
+当 React 渲染一个订阅了这个 Context 对象的组件，这个组件会从组件树中离自身最近的那个匹配的 Provider 中读取到当前的 context 值。
+
+只有当组件所处的树中没有匹配到 Provider 时，其 defaultValue 参数才会生效。
+这有助于在不使用 Provider 包装组件的情况下对组件进行测试。
+注意：将 undefined 传递给 Provider 的 value 时，消费组件的 defaultValue 不会生效。
+
+Context.Provider
+ <MyContext.Provider value={/* 某个值 */}>
+  <消费组件 />
+ </MyContext.Provider>
+
+每个 Context 对象都会返回一个 Provider React 组件，它允许消费组件订阅 context 的变化。
+
+Provider 接收一个 value 属性，传递给消费组件。一个 Provider 可以和多个消费组件有对应关系。
+多个 Provider 也可以嵌套使用，里层的会覆盖外层的数据。
+
+当 Provider 的 value 值发生变化时，它内部的所有消费组件都会重新渲染。
+Provider 及其内部 consumer 组件都不受制于 shouldComponentUpdate 函数，因此当 consumer 组件在其祖先组件退出更新的情况下也能更新。
+
+当Provider所在的父组件进行重新渲染时，会导致下边所有消费组件全部重新渲染，即使Provider的value没有发生改变。为了避免这种事情的发生，
+可以考虑把Provider的value先绑定在父组件的state上。这样当父组件进行重新渲染时就不会发生因为value是一个新对象而引发消费组件的渲染。
+这个是官方的解释，但实质上并不是这样。
+Context.Provider说到底还是组件，也按照组件基本法来办事，当value发生变化时，它也可以不引发子组件的渲染。
+前提是，子组件作为一个属性(this.props.children)也要保持不变才行。
+如果子组件变了，Context.Provider 也不知道你是不是以前的你，只好让你重画了。
+看官网中的注意事项的时候能够发现给出的代码中Provider变成了一个单独的组件，对于独立的Provider组件内部构成并没有说明。
+
+具体解释：https://zhuanlan.zhihu.com/p/50336226
+
+const MyContext = React.createContext('light');
+
+class Provider extende React.Component{
+  constructor(){
+    this.state = {
+      value:'dark'
+    }
+  }
+  render (){
+    return (
+      <MyContext.Provider value={this.state.value}>
+        {this.props.children}
+      </MyContext.Provider>
+    )
+  }
+}
+
+class MyContextRoot extende React.Component{
+  render (){
+    return (
+      <Provider>
+        <Child />
+      </Provider>
+    )
+  }
+}
+
+
+
+Class.contextType
+挂载在 class 上的 contextType 属性会被重赋值为一个由 React.createContext() 创建的 Context 对象。
+注意这种方法只能挂载一个context，如果需要多个，只能使用Context.Consumer进行多层嵌套做为props传递到下层的组件中
+方法一：
+这能让你使用 this.context 来消费最近 Context 上的那个值。
+你可以在任何生命周期中访问到它，包括 render 函数中。
+class MyClassContext extende Component {
+  var value = this.context;
+}
+MyClassContext.contextType = MyContext
+
+方法二：
+可以通过static方法绑定
+class MyClassContext extende Component{
+  static mycontext = MyContext;
+}
+
+Context.Consumer
+一个 React 组件可以订阅 context 的变更，这让你在函数式组件中可以订阅 context。
+
+function MyFuncContext(){
+  return (
+    <MyContext.Consumer>
+      {(value)=>({
+        <span>{value}</span>
+      })}
+    </MyContext.Consumer>
+  )
+}
+
+这种方法需要一个函数作为子元素（function as a child）。
+这个函数接收当前的 context 值，并返回一个 React 节点。
+传递给函数的 value 值等价于组件树上方离这个 context 最近的 Provider 提供的 value 值。
+如果没有对应的 Provider，value 参数等同于传递给 createContext() 的 defaultValue。
+
+Context.displayName
+context 对象接受一个名为 displayName 的 property，类型为字符串。React DevTools 使用该字符串来确定 context 要显示的内容。
+
+const MyContext = React.createContext(/* some value */);
+MyContext.displayName = 'MyDisplayName';
+
+
