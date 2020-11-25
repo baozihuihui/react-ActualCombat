@@ -1,7 +1,9 @@
 1、setState(newState,callback)
 React中可以通过修改state，通知React进行Update的方法
-是一个异步方法
 callback用途，接收更新后的state，可以继续操作
+
+一般情况下 是一个异步方法
+但是在定时器以及原生DOM事件会是一个同步方法
 
 异步方法的好处
 setState设计为异步，可以显著的提升性能；
@@ -11,7 +13,7 @@ setState设计为异步，可以显著的提升性能；
   state和props不能保持一致性，会在开发中产生很多的问题；
 
 
-在调用setState后直接使用新的state是错误的
+在调用setState后直接使用新的state是不建议的
 this.setState({id:'123'});
 console.log(this.state.id) // 这时候id不一定是 123
 
@@ -19,6 +21,39 @@ console.log(this.state.id) // 这时候id不一定是 123
 this.setState({id:'123'},(state)=>{
     console.log(state.id) // 这时候 id===123
 })
+
+异步变同步(不推荐)
+class MyComponent extend React.Component{
+
+    constructor(){
+      this.state={
+        id:'haha'
+      }
+    }
+
+    componentDidMount(){
+      document.getElelemtnById('btn').addEventListener('clcik',()=>{
+        this.setState({id:'123'});
+        console.log(this.state.id) // 这时候id是 123
+      })
+    }
+
+  updateWithsetTimeout = ()=>{
+    setTimeOut(()=>{
+      this.setState({id:'123'});
+      console.log(this.state.id) // 这时候id是 123
+    },0)
+  }
+
+  render(){
+    return (
+      <>
+        <button onClick={this.updateWithsetTimeout}>setTimeOut</button>
+        <button id="btn">js function </button>
+      </>
+    )
+  }
+}
 
 2、受控组件
 在React 中，可变状态（mutable state）通常保存在组件的state 属性中，并且只能通过使用setState()来更新。
