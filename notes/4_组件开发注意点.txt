@@ -160,4 +160,25 @@ Hooks的出现，是开创性的，它解决了很多React之前的存在的问�
   比如this指向问题、比如hoc的嵌套复杂度问题等等；
 
 5、Portals的使用
+通常来讲，当你从组件的render方法返回一个元素时，该元素将被挂载到DOM节点中离其最近的父节点：
+Portals提供了一种将子节点渲染到存在于父组件以外的 DOM 节点的方案
+ReactDOM.createPortal(child, container)
+  第一个参数（child）是任何可渲染的React 子元素，例如一个元素，字符串或fragment；
+  第二个参数（container）是一个DOM元素；
+
+即使child子元素被挂载到其他DOM结点下，只是DOM级挂载，但是在Fiber树上，它仍属于原Parent结点的子节点。
+现象级挂载
+  就是从HTML代码结构上可以看到是确实被挪移到目标结点下
+  目标结点通过添加事件监听，也能捕获child子元素对应冒泡的事件
+仍属于Parent原结点
+  1、仍然可以使用Context,不脱离作用域范围。
+  2、在父结点上添加的React事件(onClick)，在子节点上发生时事件时，仍能被冒泡捕获到。
+  3、但是通过elemnt.addEventListener 这种方式就不能再捕获对应事件！因为DOM元素真的被移走了！
+    <Parent onClick>
+      <Portal>
+        <Button />
+      </Portal>
+    </Parent>
+
+    即使这里的Portal被移动到其他DOM结点下，当点击Button时，仍能被Parent的onClick事件所捕获
 
