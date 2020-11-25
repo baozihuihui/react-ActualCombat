@@ -84,13 +84,13 @@ class MyClassContext extende Component {
 MyClassContext.contextType = MyContext
 
 方法二：
-可以通过static方法绑定
+可以通过static方法绑定(class Fields)
 class MyClassContext extende Component{
   static mycontext = MyContext;
 }
 
 Context.Consumer
-一个 React 组件可以订阅 context 的变更，这让你在函数式组件中可以订阅 context。
+一个 React 函数式组件可以订阅 context 的变更，这让你在函数式组件中可以订阅 context。
 
 function MyFuncContext(){
   return (
@@ -101,7 +101,6 @@ function MyFuncContext(){
     </MyContext.Consumer>
   )
 }
-
 这种方法需要一个函数作为子元素（function as a child）。
 这个函数接收当前的 context 值，并返回一个 React 节点。
 传递给函数的 value 值等价于组件树上方离这个 context 最近的 Provider 提供的 value 值。
