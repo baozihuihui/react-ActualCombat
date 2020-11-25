@@ -95,7 +95,7 @@ functionComponent(函数组件)
 默认要求
     使用function进行声明，返回值要求与classComponent的render的返回值是一样的
 特点
-    1、没有声明周期
+    1、没有生命周期
     2、没有this(没有组件实例)
     3、没有内部状态(this.state)
 

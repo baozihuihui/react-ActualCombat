@@ -1,133 +1,145 @@
 生命周期是一个抽象的概念，在生命周期的整个过程，分成了很多个阶段；
- 比如 装载阶段（Mount），组件第一次在DOM树中被渲染的过程；
- 比如 更新过程（Update），组件状态发生变化，重新更新渲染的过程；
- 比如 卸载过程（Unmount），组件从DOM树中被移除的过程；
+    比如 装载阶段（Mount），组件第一次在DOM树中被渲染的过程；
+    比如 更新过程（Update），组件状态发生变化，重新更新渲染的过程；
+    比如 卸载过程（Unmount），组件从DOM树中被移除的过程；
 React内部为了告诉我们当前处于哪些阶段，会对我们组件内部实现的某些函数进行回调，这些函数就是生命周期函数：
-比如实现componentDidMount函数：组件已经挂载到DOM上时，就会回调；
-比如实现componentDidUpdate函数：组件已经发生了更新时，就会回调；
-比如实现componentWillUnmount函数：组件即将被移除时，就会回调；
-我们可以在这些回调函数中编写自己的逻辑代码，来完成自己的需求功能；
-我们谈React生命周期时，主要谈的类的生命周期，因为函数式组件是没有生命周期函数的；
+    比如实现componentDidMount函数：组件已经挂载到DOM上时，就会回调；
+    比如实现componentDidUpdate函数：组件已经发生了更新时，就会回调；
+    比如实现componentWillUnmount函数：组件即将被移除时，就会回调；
+    我们可以在这些回调函数中编写自己的逻辑代码，来完成自己的需求功能；
+    我们谈React生命周期时，主要谈的类的生命周期，因为函数式组件是没有生命周期函数的；
 
 常用周期函数：
 constructor()
- 构造函数用于初始化props，state以及绑定this指向，如果不需要这些操作可以省略构造函数,需要注意的是
- 构造函数中不能调用setState, 而应该直接给state赋值
- props是由外部传进来的，所以不能修改props
- 不推荐将props赋值给state
+    构造函数用于初始化props，state以及绑定this指向，如果不需要这些操作可以省略构造函数,需要注意的是
+    构造函数中不能调用setState, 而应该直接给state赋值
+    props是由外部传进来的，所以不能修改props
+    不推荐将props赋值给state
 
 render()
-render函数并不会像dom中插入元素，实际上render只是返回jsx结构，或者是数组，字符串等数据，最终由ReactDOM.render渲染到dom中。
-在自定义的类组件中，render函数必须实现，并且render应该为一个根据state和props来返回结果，不造成副作用的纯函数。
+    render函数并不会像dom中插入元素，实际上render只是返回jsx结构，或者是数组，字符串等数据，最终由ReactDOM.render渲染到dom中。
+    在自定义的类组件中，render函数必须实现，并且render应该为一个根据state和props来返回结果，不造成副作用的纯函数。
 
 componentDidMount()
-会在组件插入到DOM结点树时进行调用，且只会执行一次(组件被卸载后会重新调用)
-作用：
-    1、数据请求
-    2、订阅一些行为(componentWillUnmount取消订阅)
+    会在组件插入到DOM结点树时进行调用，且只会执行一次(组件被卸载后会重新调用)
+    作用：
+        1、数据请求
+        2、订阅一些行为(componentWillUnmount取消订阅)
 
 componentDidUpdate(prevProps, prevState, snapshot)
-更新完成后会立即调用此方法，但首次渲染不会调用
-snapshot的值即为getSnapshotBeforeUpdate的返回值
-作用：
-    1、数据更新后的一些DOM操作
-    2、props变化后，进行新旧props对比后的一些操作
+    更新完成后会立即调用此方法，但首次渲染不会调用
+    snapshot的值即为getSnapshotBeforeUpdate的返回值
+    作用：
+        1、数据更新后的一些DOM操作
+        2、props变化后，进行新旧props对比后的一些操作
 
 componentWillUnmount()
-会在组件卸载及销毁之前进行调用
-不能在此调用setState
-作用：
-    1、取消订阅
-    2、清除未执行完的异步任务(setTimerout\setInterval)
+    会在组件卸载及销毁之前进行调用
+    不能在此调用setState
+    作用：
+        1、取消订阅
+        2、清除未执行完的异步任务(setTimerout\setInterval)
 
 
-不常用的声明周期
+不常用的生命周期
 static getDerivedStateFromProps(nextProps,prevState):state
-props变化时被调用，以及每一次render之前都会被调用，若是父组件重新渲染，也会被调用。
-用于在props发生改变时改变state相当于被废除的 UNSAFE_componentWillReceiveProps()，
-但静态方法无实例化对象，也就是this是undefeated，无法调用正常React组件方法进行操作！
-对于返回值，这个时候会进行一个判断 返回的新state是否发生改变
-    如果发生改变会停止后续声明周期流程，重新启动一个Update流程，又会调用getDerivedStateFromProps()
-    如果没有发生改变或是null则会继续后续流程，不会重启一个Update流程
-返回值
-return newState ｜ null(表示不更新)
+    props变化时被调用，以及每一次render之前都会被调用，若是父组件重新渲染，也会被调用。
+    用于在props发生改变时改变state相当于被废除的 UNSAFE_componentWillReceiveProps()，
+    但静态方法无实例化对象，也就是this是undefeated，无法调用正常React组件方法进行操作！
+    对于返回值，这个时候会进行一个判断 返回的新state是否发生改变
+        如果发生改变会停止后续生命周期流程，重新启动一个Update流程，又会调用getDerivedStateFromProps()
+        如果没有发生改变或是null则会继续后续流程，不会重启一个Update流程
+    返回值
+    return newState ｜ null(表示不更新)
 
 
 shouldComponentUpdate(nextProps, nextState):boolean
-在props变化或执行setState时就会被调用，通常情况返回true。若返回false。
-这个方法在挂载阶段或者执行forceUpdate时不会执行
-一般用于性能优化
-返回值 
-true(需要组件更新) | false(组件忽略本次更新)
+    在props变化或执行setState时就会被调用，通常情况返回true。若返回false。
+    这个方法在挂载阶段或者执行forceUpdate时不会执行
+    一般用于性能优化
+    返回值 
+    return true(需要组件更新) | false(组件忽略本次更新)
 
 getSnapshotBeforeUpdate(prevProps, prevState):any|null
-在最近的更改被提交到DOM元素前，使得组件可以在更改之前获得当前值。
-在render之后，dom更新之前回执行这个函数，一般会在此时读取dom更新之前的一些信息（比如滚动条位置）。
-通常用来做屏幕滚动的计算，但是具体的变更要放在componentDidUpdate上做。
-此生命周期返回的任意值都会传给componentDidUpdate()做为第三个参数。
-返回值
- any|null
+    在最近的更改被提交到DOM元素前，使得组件可以在更改之前获得当前值。
+    在render之后，dom更新之前回执行这个函数，一般会在此时读取dom更新之前的一些信息（比如滚动条位置）。
+    通常用来做屏幕滚动的计算，但是具体的变更要放在componentDidUpdate上做。
+    此生命周期返回的任意值都会传给componentDidUpdate()做为第三个参数。
+    返回值
+    return any|null
 
-static getDerivedStateFromError(error)
-当子组件抛出错误会触发这个函数，错误信息为函数的参数，次函数可以返回一个新的值来更新state，
-组件可以根据更新的state实现一个降级UI，此方法在“render阶段”执行，应该为一个纯函数
+static getDerivedStateFromError(error);state
+    当子组件抛出错误会触发这个函数，错误信息为函数的参数，结果可以返回一个新的值来更新state，
+    组件可以根据更新的state实现一个降级UI，此方法在“render阶段”执行，应该为一个纯函数
+    返回值
+    return newState | null
 
 componentDidCatch(error, info)
-错误边界会抓取组件内JS的错误，并记录显示回退UI。它会捕获渲染期间，生命周期方法以及下面整个树的构造函数的错误。
-同样当子组件抛出错误的时候回触发，第二个参数为info，其中包含了组件调用栈的信息
-这个函数是在“commit阶段”执行的，所以可以在函数中调用setState来更新state
+    错误边界会抓取组件内JS的错误，并记录显示回退UI。它会捕获渲染期间，生命周期方法以及下面整个树的构造函数的错误。
+    同样当子组件抛出错误的时候回触发，第二个参数为info，其中包含了组件调用栈的信息
+    这个函数是在“commit阶段”执行的，所以可以在函数中调用setState来更新state。
+
+    如果一个 class 组件中
+    定义了 static getDerivedStateFromError() 或 componentDidCatch() 这两个生命周期方法中的任意一个（或两个）时那么它就变成一个错误边界。
+    当抛出错误后，请使用 static getDerivedStateFromError() 渲染备用 UI ，使用 componentDidCatch() 打印错误信息。
+
+    错误边界不会生效的范围：
+    事件处理 绑定的click事件之类的
+    异步代码（例如 setTimeout 或 requestAnimationFrame 回调函数）
+    服务端渲染
+    它自身抛出来的错误（并非它的子组件），注意错误边界仅可以捕获其子组件的错误，它无法捕获其自身的错误。如果一个错误边界无法渲染错误信息，则错误会冒泡至最近的上层错误边界。
 
 移除的生命周期
-UNSAFE_componentWillMount()
-UNSAFE_componentWillUpdate()
-UNSAFE_componentWillReceiveProps()
+    UNSAFE_componentWillMount()
+    UNSAFE_componentWillUpdate()
+    UNSAFE_componentWillReceiveProps()
 
 
 生命周期的几个阶段
-在React声明周期执行的过程中，因为Fiber(非阻塞式渲染)的加入，又可以在每个阶段中分为三个片
-Render          纯净不饱饭副作用，可能会被React暂停，终止，或重新启动 
-pre-commit      可以读取DOM
-Commit          可以使用DOM，运行Effect，安排更新
+在React生命周期执行的过程中，因为Fiber(非阻塞式渲染)的加入，又可以在每个阶段中分为三个片
+    Render          纯净不饱饭副作用，可能会被React暂停，终止，或重新启动 
+    pre-commit      可以读取DOM
+    Commit          可以使用DOM，运行Effect，安排更新
 
 Render 下的生命周期
-constructor() 
-getDerivedStateFromProps()
-shouldComponentUpdate()
-render()
-getDerivedStateFromError()
+    constructor() 
+    getDerivedStateFromProps()
+    shouldComponentUpdate()
+    render()
+    getDerivedStateFromError()
 
-pre-commit 下的声明周期
-getSnapshotBeforeUpdate()
+pre-commit 下的生命周期
+    getSnapshotBeforeUpdate()
 
-Commit 阶段下的声明周期
-componentDidMount()
-componentDidUpdate()
-componentDidCatch()
+Commit 阶段下的生命周期
+    componentDidMount()
+    componentDidUpdate()
+    componentDidCatch()
 
 
 挂载过程
 当组件实例被创建并插入 DOM 中时，其生命周期调用顺序如下：
-constructor()
-static getDerivedStateFromProps()
-render()
-componentDidMount()
+    constructor()
+    static getDerivedStateFromProps()
+    render()
+    componentDidMount()
 
 更新过程
 当组件的 props 或 state 发生变化时会触发更新。组件更新的生命周期调用顺序如下：
-static getDerivedStateFromProps()
-shouldComponentUpdate()
-render()
-getSnapshotBeforeUpdate()
-componentDidUpdate()
+    static getDerivedStateFromProps()
+    shouldComponentUpdate()
+    render()
+    getSnapshotBeforeUpdate()
+    componentDidUpdate()
 
 卸载过程
 当组件从 DOM 中移除时会调用如下方法：
-componentWillUnmount()
+    componentWillUnmount()
 
 
 错误处理
 当渲染过程，生命周期，或子组件的构造函数中抛出错误时，会调用如下方法：
-static getDerivedStateFromError()
-componentDidCatch()
+    static getDerivedStateFromError()
+    componentDidCatch()
 
 
