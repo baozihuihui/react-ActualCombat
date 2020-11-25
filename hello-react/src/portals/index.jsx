@@ -14,16 +14,23 @@ export default class PortalParent extends Component {
 
   componentDidMount() {
     this.portalParent = document.getElementById("portalParent");
-    this.portalParent.addEventListener("click", () => {
-      console.log("portalParent catch with addEventListener!");
-    });
+    this.portalParent.addEventListener("click", this.parentAddEventListener);
   }
 
   componentWillUnmount() {
     if (this.targetDiv) {
       this.body.removeChild(this.targetDiv);
     }
+    this.portalParent.removeEventListener("click", this.parentAddEventListener);
   }
+
+  parentAddEventListener = () => {
+    console.log("portalParent catch with addEventListener!");
+  };
+
+  targetDivAddEventListener = () => {
+    console.log("targetDiv catch with addEventListener!");
+  };
 
   createTargetDiv = () => {
     if (!this.targetDiv) {
@@ -37,9 +44,7 @@ export default class PortalParent extends Component {
         "background:red;width:200px;height:200px;margin:5px"
       );
       // 这里通过原生DOM结点添加监听，也是能捕获到Portal里边的冒泡事件
-      this.targetDiv.addEventListener("click", () => {
-        console.log("targetDiv catch with addEventListener!");
-      });
+      this.targetDiv.addEventListener("click", this.targetDivAddEventListener);
     }
   };
 

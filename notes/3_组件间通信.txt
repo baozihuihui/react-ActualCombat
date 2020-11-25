@@ -74,7 +74,7 @@ class MyContextRoot extende React.Component{
 
 Class.contextType
 挂载在 class 上的 contextType 属性会被重赋值为一个由 React.createContext() 创建的 Context 对象。
-注意这种方法只能挂载一个context，如果需要多个，只能使用Context.Consumer进行多层嵌套做为props传递到下层的组件中
+注意这种方法只能挂载一个context，如果需要多个，只能使用Context.Consumer进行多层嵌套
 方法一：
 这能让你使用 this.context 来消费最近 Context 上的那个值。
 你可以在任何生命周期中访问到它，包括 render 函数中。
@@ -90,7 +90,8 @@ class MyClassContext extende Component{
 }
 
 Context.Consumer
-一个 React 函数式组件可以订阅 context 的变更，这让你在函数式组件中可以订阅 context。
+一个 React 函数式组件 可以订阅 context 的变更，这让你在函数式组件中可以订阅 context。
+同时 类组件也通过这种方式订阅多个Context
 
 function MyFuncContext(){
   return (
