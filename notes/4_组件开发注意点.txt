@@ -123,7 +123,8 @@ class FormComponent extends React.Component{
 function higherOrderComponent(component){
   class Component extends React.Component{
     render (){
-      return <component/>
+      {/* 需要将接收的props进行向下传递 */}
+      return <component {...this.props}/>
     }
   }
   Component.displayName = "EnhancedComponent";
