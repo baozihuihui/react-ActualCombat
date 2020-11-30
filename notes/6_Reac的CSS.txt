@@ -103,7 +103,7 @@ function App(){
         )
     }
 
-修改第三方样式，且透传同类型字段
+修改第三方样式，且透传第三方样式同名字段
 方案二：通过style包裹,提前移除自定义属性
     import Components from 'react'
     import {Button} from 'antd'
