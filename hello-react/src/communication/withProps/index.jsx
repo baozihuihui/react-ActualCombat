@@ -1,7 +1,6 @@
 import * as React from "react";
 import FunctionComponent from "./functionComp";
 import ClassComponent from "./classComp";
-import "../../common/commonCSS.css";
 
 export default class Communication extends React.Component {
   constructor() {

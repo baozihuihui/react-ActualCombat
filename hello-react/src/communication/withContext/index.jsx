@@ -5,8 +5,6 @@ import ClassComponent from "./classComp";
 import FunctionComponent from "./functionComp";
 import SimpleComponent from "./simpleComp";
 
-import "../../common/commonCSS.css";
-
 const { ThemeContext, UserInfoContext } = Store;
 export default class ContextRoot extends Component {
   constructor() {

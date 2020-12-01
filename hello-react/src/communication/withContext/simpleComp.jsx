@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import "../../common/commonCSS.css";
 // import { SimpleContext } from "./contextStore";
 
 export default class SimpleComponent extends Component {

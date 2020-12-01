@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import * as Store from "./contextStore";
-import "../../common/commonCSS.css";
 
 export default class classComp extends Component {
   componentDidUpdate() {

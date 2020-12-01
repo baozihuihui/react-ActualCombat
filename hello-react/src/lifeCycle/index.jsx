@@ -1,6 +1,5 @@
 import * as React from "react";
 import Child from "./child";
-import "../common/commonCSS.css";
 
 export default class LifeCycle extends React.Component {
   constructor() {

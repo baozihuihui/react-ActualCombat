@@ -1,0 +1,135 @@
+1、什么是Hooks
+在不编写 class 的情况下使用 state 以及其他的 React 特性(生命周期)
+
+规则
+只在最顶层使用Hook
+  不要在循环、条件或是嵌套函数中调用Hook;因为React在为组件每次渲染时，保存和读取数据是依赖Hook的执行按顺序来进行的。
+  可以理解成多个ReactHooks API只是一个Hook的语法糖。
+  多次调用实际都是在调用一个函数，但是Hooks会记录下调用的次序以及入参和出参，一旦顺序出错，那么在再次渲染时对应的返回值就会出现问题。
+只在React函数中调用Hook
+  不要在普通的JS函数中调用Hook。Hook只能在React的函数组件中调用，或是在自定义Hook中调用其他的Hook。
+  自动移Hooks使用 use 为开头进行声明
+
+
+
+State Hooks
+函数组件中，使用class组件的state类似功能。进行函数式组件内部状态管理，以及组件更新。
+是一个异步更新
+
+import React, { useState } from "react";
+
+export default function UseState() {
+  const [count, setCount] = useState(0);
+  return (
+    <div>
+      <p> useState</p>
+      <h2>点击次数:{count}</h2>
+      <button
+        onClick={() => {
+          setCount(count + 1);
+        }}
+      >
+        点击
+      </button>
+    </div>
+  );
+}
+
+useState 做了什么
+通过useState进行注册的“state”以及变更方法，会被React保留，不会随着函数组件退出而被销毁。
+
+useState 入参
+入参：“state”初始化时需要的值
+
+useState 出参
+出参：是一个数组。
+第一个值：是“state”初始化的赋值结果(类似于 this.state.xxx)，用于后续组件或函数中的计算以及展示。
+第二个值：是修改这个"state"的方法(类似于 this.setstate)。
+
+如何使用多个state变量
+方法一：
+多个state,多个声明。因为变量与函数是成对出现的，可以方便区分。
+const [state1,setState1] = useState(0);
+const [state2,setState2] = useState(2);
+const [state3,setState3] = useState(3);
+
+方法二：
+将相互关连的数据，可以放在一个对象中进行管理。但是不建议将所有数据都放在一个对象中。因为useState不会帮你合并，只会直接替换。
+const initState = {
+    state1:'haha',
+    state2:'hehe'
+}
+const [mixState,setMinState] = useState(initState);
+setMixState({state1:'heihei'}); // 这样就没有state2了
+setMixState({...mixState,state1:'heihei'});
+
+所以尽量将相关联的数据放到一个state，但是相关性不大的数据，放在一起，尤其是在复杂数据结构进行数据更新时会显得很麻烦。
+
+Effect Hooks 
+函数组件中，使用class组件中生命周期(componentDidmount/componentUpdate)等生命周期，方便在函数组件进行渲染的时候
+可以在渲染过程中进行 订阅/取消订阅 消息 等操作。
+
+UseEffect是不会阻塞浏览器更新屏幕，是异步的。如果需要测量屏幕之类的同步Effect,可以使用useLauoutEffect。
+当出现多个useEffect时，会根据声明顺序，依次调用多个useEffect。
+
+import React, { useState, useEffect } from "react";
+
+export default function UseEffect() {
+  const [count, setCount] = useState(0);
+
+  // 相当于 componentDidMount 和 componentDidUpdate:
+  useEffect(() => {
+    // 使用浏览器的 API 更新页面标题
+    document.title = `You clicked ${count} times`;
+  });
+
+  return (
+    <div>
+      <p>点击次数：{count}</p>
+      <button onClick={() => setCount(count + 1)}>点击</button>
+    </div>
+  );
+}
+
+需要清除的Effect
+如同ComponentWillUnmount一样，绑定的监听事件或是定时器，需要在组件卸载时进行取消，防止内存泄漏。那么useEffect也
+允许通过在传入的函数中，返回一个可执行的函数，作为清除Effect时被调用。
+
+useEffect(()=>{
+    console.log('每次渲染都执行');
+    return ()=>{
+        console.log('卸载时执行');
+    }
+});
+
+
+注意：effect在每次渲染时候都会执行。但在执行当前effect时，会主动对上一个effect进行清除，主动执行函数中返回的可执行函数。
+因为每一次的渲染执行effect时可能都会进行一个绑定，那么如果没有取消上一个监听，会导致监听错乱，甚至重复监听。
+例如：模拟一个函数组件渲染更新过程
+//Mount FuncComponent
+执行effect，添加一个监听
+
+// update FuncComponent
+执行清除Effect函数，移除上一个添加的监听
+执行effect,添加一个监听
+
+如果没有清除这一步，那么页面上同样一个组件在每一次更新都会重新注册，却不删除原有监听。这样会出现bug!
+
+同样的如果我们的useEffect执行了并不需要重复调用的操作，那么我们可以通过第三个参数进行跳过。
+类似于 componentDidUpdate一样，可以通过检查prevState,prevProps来确定是否执行更新。
+useEffect,也可一将需要比较的参数组成数组，作为第二个可选参数，通知React，是否需要在渲染中再次执行。
+
+// 父组件将更新次数传递给下层组件，下层组件每5次进行一个执行一次useEffect
+useEffect(()=>{ console.log('counter变为了：',props.updateTimes) },[parseInt(props.updateTimes/5)]);
+
+如果想执行只运行一次的 effect（仅在组件挂载和卸载时执行），可以传递一个空数组（[]）作为第二个参数。
+这就告诉 React 你的 effect 不依赖于 props 或 state 中的任何值，所以它永远都不需要重复执行。
+这并不属于特殊情况 —— 它依然遵循依赖数组的工作方式。
+
+自定义Hooks
+如果函数的名字以 “use” 开头并调用其他 Hook，我们就说这是一个自定义 Hook。
+
+
+其他Hooks
+useContext
+useReducer

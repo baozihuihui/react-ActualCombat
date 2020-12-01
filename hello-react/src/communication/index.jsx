@@ -1,7 +1,6 @@
 import * as React from "react";
 import PropsRoot from "./withProps";
 import ContextRoot from "./withContext";
-import "../common/commonCSS.css";
 
 export default class Communication extends React.Component {
   constructor() {

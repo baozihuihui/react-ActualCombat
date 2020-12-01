@@ -1,6 +1,5 @@
 import React from "react";
 import * as Store from "./contextStore";
-import "../../common/commonCSS.css";
 
 export default function functionComp() {
   const { ThemeContext, UserInfoContext } = Store;
