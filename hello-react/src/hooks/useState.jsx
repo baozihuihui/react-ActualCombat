@@ -20,6 +20,23 @@ export default function UseState() {
     setCount(count + 1);
     console.log("count:", count); // 同样是一个异步
   }
+
+  function addWays(way) {
+    if (way === "newState") {
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+    } else if (way === "func") {
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+    }
+  }
+
   return (
     <div>
       <p>useState</p>
@@ -30,6 +47,20 @@ export default function UseState() {
         }}
       >
         点击
+      </button>
+      <button
+        onClick={() => {
+          addWays("newState");
+        }}
+      >
+        通过 setState(state+1)点击5次
+      </button>
+      <button
+        onClick={() => {
+          addWays("func");
+        }}
+      >
+        通过{`setState(s=>s+1)`}点击5次
       </button>
       <p>混合State(mixState)</p>
       <p>mixState.state1:{mixState.state1}</p>

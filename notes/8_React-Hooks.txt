@@ -46,6 +46,15 @@ useState 出参
   第一个值：是“state”初始化的赋值结果(类似于 this.state.xxx)，用于后续组件或函数中的计算以及展示。
   第二个值：是修改这个"state"的方法(类似于 this.setstate)。
 
+修改state的setState方法有两种使用方式
+方法一：利用原有的state进行更新
+   setState(state+1)
+方法二：利用函数式更新，这样可以避免在某些无法直接获取state准确值时进行使用
+   例如在useEffect中，不想指定state作为依赖，又需要修改state时，这时候因为state被闭包，永远拿不到准确值
+   setstate(s=>s+1)
+
+连续多次调用方法一，只会执行一次。但是方法二是每次都生效。
+
 如何使用多个state变量
   方法一：
   多个state,多个声明。因为变量与函数是成对出现的，可以方便区分。
