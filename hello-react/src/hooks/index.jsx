@@ -1,9 +1,17 @@
 import React, { useState } from "react";
 import UseSate from "./useState";
 import UseEffect from "./useEffect";
+import UseRef from "./useRef";
+import UseImperativeHandle from "./useImperativeHandle";
 import CustomHooks from "./customHooks";
 
-const defaultComponnetsNames = ["useState", "useEffect", "useCustom"];
+const defaultComponnetsNames = [
+  "useState",
+  "useEffect",
+  "useCustom",
+  "useRef",
+  "useImperativeHandle",
+];
 
 export default function ReactHooks() {
   const [updateTime, setUpdateTime] = useState(1);
@@ -50,6 +58,10 @@ export default function ReactHooks() {
         return <UseEffect updateTime={updateTime} />;
       case defaultComponnetsNames[2]:
         return <CustomHooks />;
+      case defaultComponnetsNames[3]:
+        return <UseRef />;
+      case defaultComponnetsNames[4]:
+        return <UseImperativeHandle />;
       default:
         return null;
     }

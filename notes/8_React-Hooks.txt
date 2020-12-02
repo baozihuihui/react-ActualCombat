@@ -13,109 +13,108 @@
 
 
 State Hooks
-函数组件中，使用class组件的state类似功能。进行函数式组件内部状态管理，以及组件更新。
-是一个异步更新
+  函数组件中，使用class组件的state类似功能。进行函数式组件内部状态管理，以及组件更新。
+  是一个异步更新
 
-import React, { useState } from "react";
+  import React, { useState } from "react";
 
-export default function UseState() {
-  const [count, setCount] = useState(0);
-  return (
-    <div>
-      <p> useState</p>
-      <h2>点击次数:{count}</h2>
-      <button
-        onClick={() => {
-          setCount(count + 1);
-        }}
-      >
-        点击
-      </button>
-    </div>
-  );
-}
+  export default function UseState() {
+    const [count, setCount] = useState(0);
+    return (
+      <div>
+        <p> useState</p>
+        <h2>点击次数:{count}</h2>
+        <button
+          onClick={() => {
+            setCount(count + 1);
+          }}
+        >
+          点击
+        </button>
+      </div>
+    );
+  }
 
 useState 做了什么
-通过useState进行注册的“state”以及变更方法，会被React保留，不会随着函数组件退出而被销毁。
+  通过useState进行注册的“state”以及变更方法，会被React保留，不会随着函数组件退出而被销毁。
 
 useState 入参
-入参：“state”初始化时需要的值
+  入参：“state”初始化时需要的值
 
 useState 出参
-出参：是一个数组。
-第一个值：是“state”初始化的赋值结果(类似于 this.state.xxx)，用于后续组件或函数中的计算以及展示。
-第二个值：是修改这个"state"的方法(类似于 this.setstate)。
+  出参：是一个数组。
+  第一个值：是“state”初始化的赋值结果(类似于 this.state.xxx)，用于后续组件或函数中的计算以及展示。
+  第二个值：是修改这个"state"的方法(类似于 this.setstate)。
 
 如何使用多个state变量
-方法一：
-多个state,多个声明。因为变量与函数是成对出现的，可以方便区分。
-const [state1,setState1] = useState(0);
-const [state2,setState2] = useState(2);
-const [state3,setState3] = useState(3);
+  方法一：
+  多个state,多个声明。因为变量与函数是成对出现的，可以方便区分。
+  const [state1,setState1] = useState(0);
+  const [state2,setState2] = useState(2);
+  const [state3,setState3] = useState(3);
 
 方法二：
-将相互关连的数据，可以放在一个对象中进行管理。但是不建议将所有数据都放在一个对象中。因为useState不会帮你合并，只会直接替换。
-const initState = {
-    state1:'haha',
-    state2:'hehe'
-}
-const [mixState,setMinState] = useState(initState);
-setMixState({state1:'heihei'}); // 这样就没有state2了
-setMixState({...mixState,state1:'heihei'});
+  将相互关连的数据，可以放在一个对象中进行管理。但是不建议将所有数据都放在一个对象中。因为useState不会帮你合并，只会直接替换。
+  const initState = {
+      state1:'haha',
+      state2:'hehe'
+  }
+  const [mixState,setMinState] = useState(initState);
+  setMixState({state1:'heihei'}); // 这样就没有state2了
+  setMixState({...mixState,state1:'heihei'});
 
-所以尽量将相关联的数据放到一个state，但是相关性不大的数据，放在一起，尤其是在复杂数据结构进行数据更新时会显得很麻烦。
+  所以尽量将相关联的数据放到一个state，但是相关性不大的数据，放在一起，尤其是在复杂数据结构进行数据更新时会显得很麻烦。
 
 Effect Hooks 
-函数组件中，使用class组件中生命周期(componentDidmount/componentUpdate)等生命周期，方便在函数组件进行渲染的时候
-可以在渲染过程中进行 订阅/取消订阅 消息 等操作。
+  函数组件中，使用class组件中生命周期(componentDidmount/componentUpdate)等生命周期，方便在函数组件进行渲染的时候
+  可以在渲染过程中进行 订阅/取消订阅 消息 等操作。
 
-UseEffect是不会阻塞浏览器更新屏幕，是异步的。如果需要测量屏幕之类的同步Effect,可以使用useLauoutEffect。
-当出现多个useEffect时，会根据声明顺序，依次调用多个useEffect。
+  UseEffect是不会阻塞浏览器更新屏幕，是异步的。如果需要测量屏幕之类的同步Effect,可以使用useLauoutEffect。
+  当出现多个useEffect时，会根据声明顺序，依次调用多个useEffect。
 
-import React, { useState, useEffect } from "react";
+  import React, { useState, useEffect } from "react";
 
-export default function UseEffect() {
-  const [count, setCount] = useState(0);
+  export default function UseEffect() {
+    const [count, setCount] = useState(0);
 
-  // 相当于 componentDidMount 和 componentDidUpdate:
-  useEffect(() => {
-    // 使用浏览器的 API 更新页面标题
-    document.title = `You clicked ${count} times`;
-  });
+    // 相当于 componentDidMount 和 componentDidUpdate:
+    useEffect(() => {
+      // 使用浏览器的 API 更新页面标题
+      document.title = `You clicked ${count} times`;
+    });
 
-  return (
-    <div>
-      <p>点击次数：{count}</p>
-      <button onClick={() => setCount(count + 1)}>点击</button>
-    </div>
-  );
-}
+    return (
+      <div>
+        <p>点击次数：{count}</p>
+        <button onClick={() => setCount(count + 1)}>点击</button>
+      </div>
+    );
+  }
 
 需要清除的Effect
-如同ComponentWillUnmount一样，绑定的监听事件或是定时器，需要在组件卸载时进行取消，防止内存泄漏。那么useEffect也
-允许通过在传入的函数中，返回一个可执行的函数，作为清除Effect时被调用。
+  如同ComponentWillUnmount一样，绑定的监听事件或是定时器，需要在组件卸载时进行取消，防止内存泄漏。那么useEffect也
+  允许通过在传入的函数中，返回一个可执行的函数，作为清除Effect时被调用。
 
-useEffect(()=>{
-    console.log('每次渲染都执行');
-    return ()=>{
-        console.log('卸载时执行');
-    }
-});
-
+  useEffect(()=>{
+      console.log('每次渲染都执行');
+      return ()=>{
+          console.log('卸载时执行');
+      }
+  });
 
 注意：effect在每次渲染时候都会执行。但在执行当前effect时，会主动对上一个effect进行清除，主动执行函数中返回的可执行函数。
-因为每一次的渲染执行effect时可能都会进行一个绑定，那么如果没有取消上一个监听，会导致监听错乱，甚至重复监听。
-例如：模拟一个函数组件渲染更新过程
-//Mount FuncComponent
-执行effect，添加一个监听
+  因为每一次的渲染执行effect时可能都会进行一个绑定，那么如果没有取消上一个监听，会导致监听错乱，甚至重复监听。
+  例如：模拟一个函数组件渲染更新过程
+  //Mount FuncComponent
+  执行effect，添加一个监听
 
-// update FuncComponent
-执行清除Effect函数，移除上一个添加的监听
-执行effect,添加一个监听
+  // update FuncComponent
+  执行清除Effect函数，移除上一个添加的监听
+  执行effect,添加一个监听
 
-如果没有清除这一步，那么页面上同样一个组件在每一次更新都会重新注册，却不删除原有监听。这样会出现bug!
+  如果没有清除这一步，那么页面上同样一个组件在每一次更新都会重新注册，却不删除原有监听。这样会出现bug!
 
-同样的如果我们的useEffect执行了并不需要重复调用的操作，那么我们可以通过第三个参数进行跳过。
+同样的如果我们的useEffect执行了并不需要重复调用的操作，那么我们可以通过第二个参数进行跳过。
 类似于 componentDidUpdate一样，可以通过检查prevState,prevProps来确定是否执行更新。
 useEffect,也可一将需要比较的参数组成数组，作为第二个可选参数，通知React，是否需要在渲染中再次执行。
 
@@ -127,9 +126,161 @@ useEffect(()=>{ console.log('counter变为了：',props.updateTimes) },[parseInt
 这并不属于特殊情况 —— 它依然遵循依赖数组的工作方式。
 
 自定义Hooks
-如果函数的名字以 “use” 开头并调用其他 Hook，我们就说这是一个自定义 Hook。
-
+  如果函数的名字以 “use” 开头并调用其他 Hook，我们就说这是一个自定义 Hook。
+  每一个函数组件中调用同一个自定义Hooks，但每个函数组件中自定义Hooks返回的值是独立的，不会共享。
+  相当于将一组Hooks封装在了一起，然后直接加以调用。这样与直接在函数组件中调用没有区别。
 
 其他Hooks
 useContext
+  const value = useContext(MyContext);
+  接收一个 context 对象（React.createContext 的返回值）并返回该 context 的当前值。
+  当前的 context 值由上层组件中距离当前组件最近的 <MyContext.Provider> 的 value prop 决定。
+
+  当组件上层最近的 <MyContext.Provider> 更新时，该 Hook 会触发重渲染，
+  并使用最新传递给 MyContext provider 的 context value 值。
+  即使祖先使用 React.memo 或 shouldComponentUpdate，也会在组件本身使用 useContext 时重新渲染。
+
 useReducer
+  const [state,dispatch] = useReducer(reducer,initialArg,initState)
+
+  reducer     纯函数，接收一个action(字符串，用于处理究竟执行哪个更新操作)，一个变更值，返回一个新的state
+  initialArg  纯函数 接收 initstate,并返回一个操作后的state，最终作为初始化state
+  initState   默认state,若没有第二个参数，只传initstate，则直接作为初始化state
+
+
+useCallBack
+  const memoizedCallback = useCallback(
+    () => {
+      doSomething(a, b);
+    },
+    [a, b],
+  );
+  返回一个 memoized 回调函数，使用还是同样的使用，只是对这个函数，以及对应的依赖项进行了一个缓存。
+  只要函数依赖项不发生改变，那么传递给子组件时，不会因为父组件的更新，子组件接收这个函数是一个新对象，而导致子组件的不必要更新。
+
+  把内联回调函数及依赖项数组作为参数传入 useCallback，它将返回该回调函数的 memoized 版本，该回调函数仅在某个依赖项改变时才会更新。
+  当你把回调函数传递给经过优化的并使用引用相等性去避免非必要渲染（例如 shouldComponentUpdate）的子组件时，它将非常有用。
+  useCallback(fn, deps) 相当于 useMemo(() => fn, deps)。
+
+  对比useMemo，useMemo缓存的是一个值，useCallback缓存的是一个函数，是对一个单独的props值进行缓存
+  memo缓存的是组件本身，是站在全局的角度进行优化
+
+useMemo
+  const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+  返回一个 通过第一个函数计算得出的 memoized 值，就是要求第一个参数是一个纯函数，且必须有返回值。
+
+  把“创建”函数和依赖项数组作为参数传入 useMemo，它仅会在某个依赖项改变时才重新计算 memoized 值。
+  这种优化有助于避免在每次渲染时都进行高开销的计算。
+
+  记住，传入 useMemo 的函数会在渲染期间执行。
+  请不要在这个函数内部执行与渲染无关的操作，诸如副作用这类的操作属于 useEffect 的适用范畴，而不是 useMemo。
+
+  如果没有提供依赖项数组，useMemo 在每次渲染时都会计算新的值。
+
+useRef
+  useRef可以接受一个默认值，并返回一个含有current属性的可变对象;
+  使用场景：
+  1、获取子组件的实例(子组件需为react类继承组件)；
+    function parent(){
+      const childRef = useRef(null);
+      return (<>
+              <Child ref={childRef} />
+              <button onClick={()=>{console.log(childRef.current)}} >获取Child组件</button>
+             </>)
+    }
+
+    class child extends Components{
+      return <>haha</>
+    }
+
+  2、获取组件中某个DOM元素；
+      const inputRef = useRef(null);
+      <input ref={inputRef} type="text" />
+  3、用做组件的全局变量。
+      useRef返回对象中含有一个current属性，该属性可以在整个组件色生命周期内不变，不会因为重复render而重复申明，
+      类似于react类继承组件的属性this.xxx一样。
+      const isClick = useRef(false);
+      console.log(isClick.current); // 输出 false 
+
+useImperativeHandle
+useImperativeHandle(ref, createHandle, [deps]);
+入参
+  ref：定义 current 对象的 ref 
+  createHandle：一个函数，返回值是一个对象，即这个 ref 的 current
+  [deps]：即依赖列表，当监听的依赖发生变化，useImperativeHandle 才会重新将子组件的实例属性输出到父组件
+  
+  ref 的 current 属性上，如果为空数组，则不会重新输出。
+
+  与React.forwadRef搭配，返回一个由子组件修改后的Ref,传递回父组件方便父组件查询部分值的变化。
+
+import React, { useRef, useState, useImperativeHandle } from "react";
+
+const Child = React.forwardRef((props, ref) => {
+  const inputRef = useRef(null);
+  const globalAttr = useRef(0);
+  const [clickTime, setClickTime] = useState(0);
+  useImperativeHandle(ref, () => {
+    return {
+      globalAttr,
+      addClickTime: () => {
+        setClickTime(clickTime + 1);
+      },
+      focus: () => {
+        inputRef.current.focus();
+      },
+    };
+  });
+  return (
+    <div>
+      <p>父组件点击次数值：{clickTime}</p>
+      <p>全局变量值：{globalAttr.current}</p>
+      <input ref={inputRef} type="text" />
+      <button
+        onClick={() => {
+          globalAttr.current += 1;
+        }}
+      >
+        更新子组件全局变量
+      </button>
+    </div>
+  );
+});
+
+export default function UseImperativeHandle() {
+  const childRef = useRef(null);
+  return (
+    <>
+      <Child ref={childRef} />
+      <button
+        onClick={() => {
+          childRef.current.focus();
+        }}
+      >
+        获取子节点输入框焦点
+      </button>
+      <button
+        onClick={() => {
+          childRef.current.addClickTime();
+        }}
+      >
+        增加子组件添加值
+      </button>
+      <button
+        onClick={() => {
+          console.log(childRef.current.globalAttr);
+        }}
+      >
+        输出子组件全局变量
+      </button>
+    </>
+  );
+}
+
+
+useLayoutEffect
+使用方法与useEffect 是一致的。
+useLayoutEffect里面的callback函数会在DOM更新完成后立即执行,但是会在浏览器进行任何绘制之前运行完成,阻塞了浏览器的绘制。
+但是它是阻塞浏览器渲染的更新，在绘制之前会执行的副作用，一般用于有需要变更或是获取DOM的操作。
+
+useDebugValue
+开发过程中使用，正式环境没啥用

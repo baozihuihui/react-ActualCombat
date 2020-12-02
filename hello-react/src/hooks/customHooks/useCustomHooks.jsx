@@ -1,15 +1,24 @@
 import { useState, useEffect } from "react";
 
-export default function useCustomHooks() {
-  const [isOnLine, setIsOnLine] = useState(false);
+export function useCustomHooks(components, updateUserStatus) {
   useEffect(() => {
+    console.log(components, "执行 自定义Hooks的useEffect");
     const timer = setTimeout(() => {
-      setIsOnLine(false);
+      updateUserStatus();
     }, 1000);
-
     return () => {
+      console.log(components, "卸载 自定义Hooks的useEffect");
       clearTimeout(timer);
     };
-  });
-  return isOnLine;
+  }, [components, updateUserStatus]);
+}
+
+export function useCustomReducer(reducer, initState) {
+  const [state, setState] = useState(initState);
+  function dispatch(action, payload) {
+    const newState = reducer(action, state, payload);
+    setState(newState);
+  }
+
+  return [state, dispatch];
 }
