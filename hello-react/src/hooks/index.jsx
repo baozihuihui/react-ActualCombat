@@ -4,6 +4,7 @@ import UseEffect from "./useEffect";
 import UseRef from "./useRef";
 import UseImperativeHandle from "./useImperativeHandle";
 import CustomHooks from "./customHooks";
+import UseCallback from "./useCallback";
 
 const defaultComponnetsNames = [
   "useState",
@@ -11,6 +12,7 @@ const defaultComponnetsNames = [
   "useCustom",
   "useRef",
   "useImperativeHandle",
+  "useCallBack",
 ];
 
 export default function ReactHooks() {
@@ -62,6 +64,8 @@ export default function ReactHooks() {
         return <UseRef />;
       case defaultComponnetsNames[4]:
         return <UseImperativeHandle />;
+      case defaultComponnetsNames[5]:
+        return <UseCallback />;
       default:
         return null;
     }
