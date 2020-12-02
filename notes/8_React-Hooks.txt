@@ -54,6 +54,23 @@ useState 出参
    setstate(s=>s+1)
 
 连续多次调用方法一，只会执行一次。但是方法二是每次都生效。
+  const [count,setCount] = useState(0);
+  if (way === "newState") {
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+      setCount(count + 1);
+      // 执行结束后 count = count + 1
+    } else if (way === "func") {
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+      setCount((s) => s + 1);
+      // 执行结束后 count = count + 5
+    }
+
 
 如何使用多个state变量
   方法一：
