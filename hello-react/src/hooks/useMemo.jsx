@@ -70,25 +70,33 @@ export default function UseMemo() {
         <button onClick={forceUpdate}>主动更新</button>
       </p>
       <div>
+        {/* 重新渲染 */}
         <NoneChild tittle={"default NoneChild"} />
+        {/* 不重新渲染 */}
         <NoneChildWithMemo tittle={"React.memo NoneChild"} />
+        {/* 重新渲染 */}
         <Child info={userInfo} tittle={"default Child userInfo default"} />
+        {/* 重新渲染 */}
         <ChildWithMemo
           info={userInfo}
           tittle={"React.Memo Child userInfo default "}
         />
+        {/* 重新渲染 */}
         <Child
           info={userInfoWithUseMemo}
           tittle="default Child userInfo useMemo"
         />
+        {/* 不重新渲染 */}
         <ChildWithMemo
           info={userInfoWithUseMemo}
           tittle={"React.Memo Child userInfo useMemo"}
         />
+        {/* 重新渲染 */}
         <Child
           info={userInfoRef.current}
           tittle="default Child userInfo useRef"
         />
+        {/* 不重新渲染 */}
         <ChildWithMemo
           info={userInfoRef.current}
           tittle={"React.Memo Child userInfo useRef"}
