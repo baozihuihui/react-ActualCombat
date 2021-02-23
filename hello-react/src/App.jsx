@@ -5,7 +5,8 @@ import "./common/commonCSS.css";
 // import Communication from "./communication";
 // import PortalDemo from "./portals";
 // import ReactHooks from "./hooks";
-import ReduxDemo from "./redux";
+// import ReduxDemo from "./redux";
+import ReactReduxDemo from "./react-redux";
 export default class App extends React.Component {
   render() {
     return (
@@ -14,7 +15,7 @@ export default class App extends React.Component {
           <p> 常用控件 </p>
           <ClearConsole />
         </div>
-        <ReduxDemo />
+        <ReactReduxDemo />
         {/* <LifeCycle /> */}
         {/* <Communication /> */}
         {/* <PortalDemo /> */}
