@@ -55,37 +55,53 @@ const connectWithHooks = (mapStateToProps, mapDispatchToProps) => (
 const connect = (mapStateToProps, mapDispatchToProps) => (WarppComponent) => {
   return class component extends React.Component {
     static contextType = ProviderContext;
-    state = { reduxProps: {} };
+
+    constructor(props, context) {
+      super(props);
+      this.reduxState = {};
+      this.reduxDispatch = {};
+      // 在子组件挂载前获取数据并完 props 的成复制
+      this.update(context);
+    }
+
     componentDidMount() {
       const { getState, dispatch, subscribe } = this.context;
       // 初始化更新
       this.update(getState, dispatch);
       // 添加监听 用于 store 数据发生变化后，触发子组件更新
-      subscribe(() => {
+      this.unSubscribe = subscribe(() => {
         this.update(getState, dispatch);
+        this.forceUpdate();
       });
     }
 
-    update = (getState, dispatch) => {
-      const reduxState = mapStateToProps(getState(), this.props);
-      let reduxDispatch;
-      if (typeof mapDispatchToProps === "object") {
-        reduxDispatch = bindActionCreators(mapDispatchToProps, dispatch);
-      } else if (typeof mapDispatchToProps === "function") {
-        reduxDispatch = mapDispatchToProps(dispatch, this.props);
-      } else {
-        reduxDispatch = { dispatch };
+    // 防止在组件已卸载后仍执行本组件的更新操作
+    componentWillUnmount() {
+      if (this.unSubscribe) {
+        this.unSubscribe();
       }
-      this.setState({
-        reduxProps: {
-          ...reduxState,
-          ...reduxDispatch,
-        },
-      });
+    }
+
+    update = (context) => {
+      const { getState, dispatch } = context || this.context;
+      this.reduxState = mapStateToProps(getState(), this.props);
+      if (typeof mapDispatchToProps === "object") {
+        this.reduxDispatch = bindActionCreators(mapDispatchToProps, dispatch);
+      } else if (typeof mapDispatchToProps === "function") {
+        this.reduxDispatch = mapDispatchToProps(dispatch, this.props);
+      } else {
+        this.reduxDispatch = { dispatch };
+      }
     };
 
     render() {
-      return <WarppComponent {...this.state.reduxProps} {...this.props} />;
+      return (
+        <WarppComponent
+          {...this.props}
+          {...this.reduxState}
+          {...this.reduxDispatch}
+        />
+      );
     }
   };
 };
@@ -112,4 +128,4 @@ class ReactReduxProvider extends React.Component {
   }
 }
 
-export { connectWithHooks, connect, ReactReduxProvider };
+export { connect, connectWithHooks, ReactReduxProvider };
