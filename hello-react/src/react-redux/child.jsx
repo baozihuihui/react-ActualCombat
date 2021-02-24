@@ -1,5 +1,6 @@
 import React from "react";
-import { connect } from "./react-redux";
+import { connectWithHooks } from "./react-redux";
+// import { connect } from "./react-redux";
 
 class Chid extends React.Component {
   add = () => {
@@ -26,7 +27,7 @@ class Chid extends React.Component {
   }
 }
 
-export default connect((state) => ({ num: state.num }), {
+export default connectWithHooks((state) => ({ num: state.num }), {
   add: () => ({ type: "REDUX/ADD" }),
   mule: () => ({ type: "REDUX/MULE" }),
   syncAdd: () => (dispatch) =>
@@ -34,3 +35,12 @@ export default connect((state) => ({ num: state.num }), {
       dispatch({ type: "REDUX/ADD" });
     }, 1000),
 })(Chid);
+
+// export default connect((state) => ({ num: state.num }), {
+//   add: () => ({ type: "REDUX/ADD" }),
+//   mule: () => ({ type: "REDUX/MULE" }),
+//   syncAdd: () => (dispatch) =>
+//     setTimeout(() => {
+//       dispatch({ type: "REDUX/ADD" });
+//     }, 1000),
+// })(Chid);

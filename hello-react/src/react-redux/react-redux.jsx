@@ -1,6 +1,56 @@
-import React from "react";
+import React, {
+  useContext,
+  useMemo,
+  useLayoutEffect,
+  useState,
+  // useReducer,
+} from "react";
 
 const ProviderContext = React.createContext();
+
+const connectWithHooks = (mapStateToProps, mapDispatchToProps) => (
+  WarppComponent
+) => (props) => {
+  const store = useContext(ProviderContext);
+  const { getState, dispatch, subscribe } = store;
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const reduxState = useMemo(() => mapStateToProps(getState()), [getState()]);
+  let reduxDispatch = {};
+  if (typeof mapDispatchToProps === "object") {
+    reduxDispatch = useMemo(
+      () => bindActionCreators(mapDispatchToProps, dispatch),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [store]
+    );
+  } else if (typeof mapDispatchToProps === "function") {
+    reduxDispatch = useMemo(
+      () => mapDispatchToProps(dispatch, this.props),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [store]
+    );
+  } else {
+    reduxDispatch = { dispatch };
+  }
+  // 注入一个可执行组件更新的 reducer,或者是一个useState
+  // const [, forceUpdate] = useReducer(null);
+  const [state, setState] = useState(0);
+
+  /**
+   * ? 添加注册监听事件
+   * ! 不使用 useEffect,是因为 useEffect 是一个异步的回调，防止丢失更新。
+   *  */
+  useLayoutEffect(() => {
+    subscribe(() => {
+      setState(state + 1);
+      // forceUpdate();
+    });
+    return () => {
+      // unSubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getState()]);
+  return <WarppComponent {...props} {...reduxState} {...reduxDispatch} />;
+};
 
 const connect = (mapStateToProps, mapDispatchToProps) => (WarppComponent) => {
   return class component extends React.Component {
@@ -62,4 +112,4 @@ class ReactReduxProvider extends React.Component {
   }
 }
 
-export { connect, ReactReduxProvider };
+export { connectWithHooks, connect, ReactReduxProvider };

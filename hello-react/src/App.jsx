@@ -6,8 +6,8 @@ import "./common/commonCSS.css";
 // import PortalDemo from "./portals";
 // import ReactHooks from "./hooks";
 // import ReduxDemo from "./redux";
-// import ReactReduxDemo from "./react-redux";
-import ReactRouterDemo from "./react-router";
+import ReactReduxDemo from "./react-redux";
+// import ReactRouterDemo from "./react-router";
 export default class App extends React.Component {
   render() {
     return (
@@ -16,8 +16,8 @@ export default class App extends React.Component {
           <p> 常用控件 </p>
           <ClearConsole />
         </div>
-        {/* <ReactReduxDemo /> */}
-        <ReactRouterDemo />
+        <ReactReduxDemo />
+        {/* <ReactRouterDemo /> */}
         {/* <LifeCycle /> */}
         {/* <Communication /> */}
         {/* <PortalDemo /> */}
