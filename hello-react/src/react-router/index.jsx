@@ -1,5 +1,11 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+// import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+
+import BrowserRouter from "./router/BrowserRouter";
+import Route from "./router/Route";
+import Link from "./router/Link";
+import Switch from "./router/Switch";
+
 import Page1 from "./pages/page1";
 import Page2 from "./pages/page2";
 import Page3 from "./pages/page3";
@@ -22,7 +28,7 @@ export default class ReactRouterDemo extends React.Component {
             +1
           </button>
         </p>
-        <Router>
+        <BrowserRouter>
           <div>
             <ul>
               <li>
@@ -44,6 +50,7 @@ export default class ReactRouterDemo extends React.Component {
               <Route path="/page1" component={Page1}></Route>
               <Route path="/page2" component={Page2}></Route>
               <Route path="/page3" component={Page3}></Route>
+              <Route render={() => <div>404</div>}></Route>
 
               {/* 错误 component */}
               {/* <Route path="/page1" component={() => <Page1 />}></Route>
@@ -61,7 +68,7 @@ export default class ReactRouterDemo extends React.Component {
               <Route path="/page3" render={() => <Page3 />}></Route> */}
             </Switch>
           </div>
-        </Router>
+        </BrowserRouter>
       </>
     );
   }

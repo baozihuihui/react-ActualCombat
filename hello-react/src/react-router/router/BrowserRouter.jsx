@@ -32,11 +32,9 @@ export default class BrowserRouter extends React.Component {
     return (
       <ReactRouterContext.Provider
         value={{
-          context: {
-            history: this.history,
-            location: this.state.location,
-            match: BrowserRouter.computeRootMatch(this.location.pathname),
-          },
+          history: this.history,
+          location: this.state.location,
+          match: BrowserRouter.computeRootMatch(this.state.location.pathname),
         }}
       >
         {this.props.children}

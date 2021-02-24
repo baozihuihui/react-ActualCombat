@@ -3,7 +3,7 @@ import ReactRouterContext from "./ReactRouterContext";
 
 export default class Page extends React.Component {
   click = (event, context) => {
-    event.preventDefaule();
+    event.preventDefault();
     context.history.push(this.props.to);
   };
 
