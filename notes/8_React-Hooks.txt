@@ -186,7 +186,7 @@ useCallBack
 
   把内联回调函数及依赖项数组作为参数传入 useCallback，它将返回该回调函数的 memoized 版本，该回调函数仅在某个依赖项改变时才会更新。
   当你把回调函数传递给经过优化的并使用引用相等性去避免非必要渲染（例如 shouldComponentUpdate）的子组件时，它将非常有用。
-  useCallback(fn, deps) 相当于 useMemo(() => fn, deps)。
+  useCallback(fn, deps) 相当于 useMemo(() => {return fn}, deps)。
 
   对比useMemo，useMemo缓存的是一个值，useCallback缓存的是一个函数，是对一个单独的props值进行缓存
   memo缓存的是组件本身，是站在全局的角度进行优化
